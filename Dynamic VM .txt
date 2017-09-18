@@ -1,0 +1,98 @@
+﻿1 Overview:
+	The existing functionality of the Dynamic VM solution mainly includes two functions: the same content memory merge (pone), and free memory reclaim (ppr). This article focuses on how to use VM memory merging and memory reclamation based on the linux & kvm framework.
+2 Installation:
+	Dynamic VM program requires host kernel, guest kernel, and qemu tripartite collaboration. The installation process includes:
+	(1) Download linux kernel and qemu source.
+	(2) Download the Dynamic VM solution patch.
+	(3) Qemu upgrade.
+	(4) Host Kernel upgrade.
+	(5) Guest Kernel upgrade.
+	Dynamic VM's repository path is
+	https://github.com/baibantech/page_dynamic_release.git
+	For simplicity, this document uses linux-4.4.1 and qemu-2.9.0 as an example. The operating system environment is ubuntu14.0.5
+3 Steps:
+	(1)	Download and extract the Linux kernel and qemu source code
+		wget https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.4.1.tar.xz
+		tar xvf linux-4.4.1.tar.xz
+		wget https://download.qemu.org/qemu-2.9.0.tar.xz
+		tar xvf qemu-2.9.0.tar.xz
+	(2) Download the Dynamic VM solution patch
+		git clone https://github.com/baibantech/page_dynamic_release.git
+		cd page_dynamic_release, ls can see the following
+		~ / page_dynamic_release $ ls
+		patch_linux4.4.1_v1 patch_qemu2.9.0_v1
+		patch_qemu2.9.0_v1 is qemu2.9.0 corresponding patch. patch_linux4.4.1_v1 is the linux kernel 4.4.1 corresponding patch.
+	(3) qemu2.9.0 patch and installation 
+		cp page_dynamic_release / patch_qemu2.9.0_v1 qemu-2.9.0
+		cd qemu-2.9.0
+		patch -p1 <patch_qemu2.9.0_v1
+		./configure --enable-kvm --target-list = x86_64-softmmu
+		make
+		make install
+	(4) host machine linux kernel patch and installaiton 
+		a) linux4.4.1 source code patch
+		cp page_dynamic_release / patch_linux4.4.1_v1 linux-4.4.1
+		cd linux-4.4.1
+		patch -p1 <patch_linux4.4.1_v1
+		
+		b) compile and install linux
+		Copy the original operating system config file to the directory renamed .config. The original config is located in the / boot directory
+		cp /boot/config-4.4.0-78-generic .config
+		
+		make menuconfig
+		
+		Modify the configuration
+		Enter the processor type and features -> page dynamic support menu, select host
+		[*] page one merge (host)
+		[] free page reclaim (guest)
+		Close  processor type and features -> Transparent Hugepage support option
+		Enter the virtualization menu, modify the kvm related configuration
+      	<*> Kernel-based Virtual Machine (KVM) support
+      	<*> KVM for Intel processors support
+		<*> KVM for AMD processors support
+		save configuration options to .config
+		
+		make
+		make modules_install 
+		sudo make install
+		sudo reboot
+		After restarting   cat  /sys/kernel/mm/pone/pone_run  display 1 indicates that the function is working properly.
+	(5) The fourth step guest kernel compiler installation
+	 a) Use qemu-system-x86_64  install the original ubuntu 14.0.5 system, this step can be consulted qemu manual.
+	 b) On the host mechine compile guest kernel  
+		make menuconfig
+		Modify the configuration
+		Enter the processor type and features -> page dynamic support menu, select guest
+		[] page one merge (host)
+		[*] free page reclaim (guest)
+		Other configurations are the same as host kernel. Save configuration
+		
+		make
+	 c) On the host, generate the kernel image
+  		mkdir guest_img
+ 		make INSTALL_PATH=guest_img install
+	 d) On the host, generate the kernel module
+  		mkdir guest_modules
+  		make INSTALL_MOD_PATH=guest_modules modules_install
+	 e) copy guest_img, guest_modules to the guest system, a directory, such as /vm
+	
+	 f) Install kernel on guest.
+  		sudo cp -raf /vm/guest_img/*   /boot
+  		sudo update-grub
+	 g) Install modules on guest
+  		sudo cp -raf /vm/guest_modules/lib/modules/KERNEL_VERSION   /lib/modules
+	 reboot the guest kernel, complete the guest kernel upgrade. 
+	 After restarting   cat /sys/kernel/mm/pone/pone_reclaim_run  display 1 indicates that the reclaim function is working properly.
+4   configuration and basic information
+	Dynamic VM configuration and basic information is mainly in the /sys/kernel/mm/pone   directory
+
+	a. pone_abstract is used to view the number of pages merged and the number of pages reclaimed
+	b. pone_nice used to view and set, work thread nice value, the default start value of 0, the value range of -20-19
+    	c. pone_daemon_scan_period used to view and set, daemon thread scan cycle unit is milliseconds range> 5000 ,default is 20000
+	d. pone_daemon_run is used to turn on or turn off the daemon thread scan function, 1 is on, 0 is off, the default is on
+	e. pone_reclaim_run is used to turn on or off the ppr memory recycle function, 1 is on, 0 is off, the default is on
+	f. pone_run, used to open or close the page status monitoring, 1 to open, 0 is off, the default open. After the closure will not have any pages into pone or ppr.
+	g. pone_divide_thread_enable, used to open or close the function of segmentation thread, 1 is open, 0 is closed. Open by default.
+	h. pone_info, pone_sd_tree, pone_debug, pone_stat_begin, pone_stat_end is the debug function entry.
+
+
