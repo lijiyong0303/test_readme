@@ -24,10 +24,13 @@ A detailed description and test report of both technologies could be found here.
 [PageONE DESCRIPTION](https://github.com/lijiyong0303/test_readme/blob/master/pageone_info.txt)<br>
 ## About Us
 `Baiban_tech`:Hypervisor technologies.<br>
-We believe cloud can behave quite differently as new resources manage methods applied.<br>
+    We believe cloud can behave quite differently as new resources manage methods applied.<br>
+### Email
 Email us at <a href="mailto:dynamic@baibantech.com.cn">dynamic@baibantech.com.cn</a>
  
-## MailList
+### MailList
+<a href="mailto:dvm_list@freelists.org">dvm_list@freelists.org</a>
+
 
 
 ## Usage
