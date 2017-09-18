@@ -18,5 +18,9 @@ Dynamic VM is a power up that can be easily ported to different OS architectures
 Among resources of VMs, CPU and Ethernet are used dynamically all the way. The only thing had a “STATIC” flavor is memory. Removed this special case VMs become fully resources dynamic. Therefore, VMs can be deployed and billed according to real-time resources consumption. Softened VMs can make cloud more flow-able.
 
 A detailed description and test report of both technologies could be found here.
-    [PPR](https://github.com/lijiyong0303/test_readme/blob/master/ppr_info.txt)
-    [PageONE](https://github.com/lijiyong0303/test_readme/blob/master/pageone_info.txt)
+        [PPR DESCRIPTION](https://github.com/lijiyong0303/test_readme/blob/master/ppr_info.txt)
+        [PageONE DESCRIPTION](https://github.com/lijiyong0303/test_readme/blob/master/pageone_info.txt)
+# Author
+       `Baiban_tech`:Hypervisor technologies. We believe cloud can behave quite differently as new resources manage methods applied.
+        Email us at dynamic@baibantech.com.cn
+
