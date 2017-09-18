@@ -10,13 +10,13 @@ Dynamic VM is a Para-Virtualization solution that allows Guest OS and Hypervisor
 
 The solution includes two parts:
 
-1.	PPR (Per Page Recycler) is based on a lockless recycling algorithm. Hypervisor PPR engine and guest PPR driver work together to reclaim free pages without triggering each other any interrupt.
-2.	Because PPR, more VMs could be run in the same amount of physical memory. Moreover, they may produce more same-content pages. The benefit can be weakened if the page deduplication engine was overwhelmed. PageONE is a dedup-engine based on lockless tree algorithm. Any CPU can donate its spare time for more dedup power
+1.	`PPR` (Per Page Recycler) is based on a lockless recycling algorithm. Hypervisor PPR engine and guest PPR driver work together to reclaim free pages without triggering each other any interrupt.
+2.	Because PPR, more VMs could be run in the same amount of physical memory. Moreover, they may produce more same-content pages. The benefit can be weakened if the page deduplication engine was overwhelmed. `PageONE` is a dedup-engine based on lockless tree algorithm. Any CPU can donate its spare time for more dedup power
 
 Dynamic VM is a power up that can be easily ported to different OS architectures. Currently, the Hypervisor engine supports Linux KVM and the guest driver supports Linux and Windows.
 
 Among resources of VMs, CPU and Ethernet are used dynamically all the way. The only thing had a “STATIC” flavor is memory. Removed this special case VMs become fully resources dynamic. Therefore, VMs can be deployed and billed according to real-time resources consumption. Softened VMs can make cloud more flow-able.
 
 A detailed description and test report of both technologies could be found here.
-[PPR](https://github.com/lijiyong0303/test_readme/blob/master/ppr_info.txt)
-[PageONE](https://github.com/lijiyong0303/test_readme/blob/master/pageone_info.txt)
+    [PPR](https://github.com/lijiyong0303/test_readme/blob/master/ppr_info.txt)
+    [PageONE](https://github.com/lijiyong0303/test_readme/blob/master/pageone_info.txt)
