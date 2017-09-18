@@ -25,3 +25,8 @@ A detailed description and test report of both technologies could be found here.
 ## Author
 `Baiban_tech`:Hypervisor technologies.We believe cloud can behave quite differently as new resources manage methods applied.
     Email us at <a href="mailto:dynamic@baibantech.com.cn">dynamic@baibantech.com.cn</a>
+ 
+## MailList
+
+
+## Usage
